@@ -24,7 +24,7 @@ export class AuthComponent implements OnInit {
 
   submit(form: NgForm): void {
     const email = form.value.email;
-    const password = form.value.email;
+    const password = form.value.password;
 
     let authObs: Observable<AuthResponseData>;
 
@@ -48,6 +48,10 @@ export class AuthComponent implements OnInit {
     );
 
     form.reset();
+  }
+
+  handleError(): void {
+    this.error = null;
   }
 
 }
