@@ -6,9 +6,10 @@ import {
   HttpInterceptor, HttpParams
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { exhaustMap, take } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
-import { exhaustMap, take } from 'rxjs/operators';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -25,8 +26,10 @@ export class AuthInterceptor implements HttpInterceptor {
         }
 
         const modifiedReq = request.clone(
-          {params: new HttpParams().set('auth', user.token)
-        });
+          {
+            params: new HttpParams().set('auth', user.token)
+          }
+        );
         return next.handle(modifiedReq);
       })
     );
