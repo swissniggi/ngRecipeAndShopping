@@ -136,7 +136,7 @@ export class AuthService {
         break;
       case 'EMAIL_NOT_FOUND':
       case 'INVALID_PASSWORD':
-        errorMessage = 'Login not successful. Please check ouy login data.';
+        errorMessage = 'Login not successful. Please check your login data.';
         break;
     }
     return throwError(errorMessage);
