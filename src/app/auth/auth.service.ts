@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
-import { BehaviorSubject, throwError } from 'rxjs';
-import { User } from './user.model';
 import { Router } from '@angular/router';
+import { catchError, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
+
+import { User } from './user.model';
+
 
 export interface AuthResponseData {
   kind: string;
@@ -20,13 +23,13 @@ export interface AuthResponseData {
 })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
-  private tokenExpirationTimer: any;
+  private tokenExpirationTimer: number;
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  login(email: string, password: string): any {
+  login(email: string, password: string): Observable<AuthResponseData> {
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCO5ZFvnNSs6WCoRy6ILkWv6a4EfaSb6XI',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey,
       {
           email,
           password,
@@ -56,9 +59,9 @@ export class AuthService {
     this.tokenExpirationTimer = null;
   }
 
-  signup(email: string, password: string): any {
+  signup(email: string, password: string): Observable<AuthResponseData> {
     return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCO5ZFvnNSs6WCoRy6ILkWv6a4EfaSb6XI',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
       {
         email,
         password,
@@ -104,7 +107,7 @@ export class AuthService {
     }
   }
 
-  autoLogout(expirationDuration: number): any {
+  autoLogout(expirationDuration: number): number {
     return setTimeout(() => {
       this.logout();
     }, expirationDuration);
@@ -123,7 +126,7 @@ export class AuthService {
     localStorage.setItem('userData', JSON.stringify(user));
   }
 
-  private handleError(errorRes: HttpErrorResponse): any {
+  private handleError(errorRes: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
 
     if (!errorRes.error || !errorRes.error.error) {

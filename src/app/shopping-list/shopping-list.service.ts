@@ -17,15 +17,6 @@ export class ShoppingListService {
 
   constructor() { }
 
-  getIngredients(): Ingredient[] {
-    return this.ingredients.slice();
-  }
-
-  addIngredient(ingredient: Ingredient): void {
-    this.ingredients.push(ingredient);
-    this.ingredientsChanged.next(this.ingredients.slice());
-  }
-
   addIngredients(ingredients: Ingredient[]): void {
     this.ingredients.push(...ingredients);
     this.ingredientsChanged.next(this.ingredients.slice());
